@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Obed Vazquez Portfolio</title>
+<meta name="description" content="Obed Vazquez, electrical engineering student at Utah Tech University. Electric machines, PCB design, RF antennas and circuits.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Layout: full-bleed blue bands alternate with white. A floating dock replaces a top nav. The motor build reads as a numbered process down a central spine. */
+  --volt: #0000FF;
+  --volt-deep: #0000C2;
+  --paper: #FFFFFF;
+  --mist: #F1F2FF;
+  --ink: #15153F;
+  --ink-2: #4C4C78;
+  --line: #D5D7FA;
+  --on-volt: #FFFFFF;
+  --on-volt-2: #CDD0FF;
+  --font-display: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Instrument Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.625rem;
+  --step-3: clamp(1.9rem, 4vw, 2.9rem);
+  --gutter: clamp(18px, 5vw, 64px);
+  --radius: 16px;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img, video { max-width: 100%; display: block; }
+a { color: var(--volt); text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--volt); outline-offset: 3px; border-radius: 4px; }
+.on-volt :focus-visible { outline-color: var(--on-volt); }
+h1, h2, h3, h4 { font-family: var(--font-display); text-wrap: balance; margin: 0; font-weight: 700; }
+p { margin: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter); }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 16px; top: 16px; background: var(--paper); color: var(--volt); padding: 8px 12px; z-index: 50; }
+
+/* ---------- Hero ---------- */
+.hero { background: var(--volt); color: var(--on-volt); padding: clamp(40px, 7vw, 96px) 0 clamp(40px, 6vw, 72px); overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.hero h1 {
+  font-size: clamp(3rem, 8.5vw, 7.25rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 28px;
+}
+.hero h1 span { display: block; }
+.hero .intro { font-size: clamp(1.125rem, 1.6vw, 1.375rem); line-height: 1.5; max-width: 36ch; margin-bottom: 32px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  font: 600 1rem/1 var(--font-body);
+  padding: 14px 22px; border-radius: 999px; border: 2px solid currentColor;
+  text-decoration: none; cursor: pointer; background: transparent;
+}
+.btn.solid-white { background: var(--on-volt); color: var(--volt); border-color: var(--on-volt); }
+.btn.solid-white:hover { background: transparent; color: var(--on-volt); }
+.btn.line-white { color: var(--on-volt); }
+.btn.line-white:hover { background: var(--on-volt); color: var(--volt); }
+.facts { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid rgba(255,255,255,.45); }
+.facts li { padding: 14px 16px 0 0; display: grid; gap: 2px; }
+.facts li + li { padding-left: 16px; border-left: 1px solid rgba(255,255,255,.45); }
+.facts .k { font-size: var(--step--1); color: var(--on-volt-2); }
+.facts .v { font-weight: 600; }
+.stator-fig { margin: 0; }
+.stator-fig canvas { width: 100%; height: auto; aspect-ratio: 1; display: block; max-width: 520px; margin-left: auto; }
+.stator-fig figcaption { color: var(--on-volt-2); font-size: var(--step--1); text-align: right; margin-top: 10px; }
+
+/* ---------- Dock nav ---------- */
+.dock {
+  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 40;
+  display: flex; gap: 4px; padding: 6px;
+  background: var(--paper); border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(0, 0, 120, .22), 0 0 0 1px rgba(0, 0, 255, .12);
+  max-width: calc(100% - 24px); overflow-x: auto; scrollbar-width: none;
+}
+.dock::-webkit-scrollbar { display: none; }
+.dock a { flex-shrink: 0; padding: 9px 16px; border-radius: 999px; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 0.9375rem; }
+.dock a:hover { color: var(--volt); }
+.dock a[aria-current="true"] { background: var(--volt); color: var(--on-volt); }
+
+/* ---------- Motor case study ---------- */
+.motors { padding: clamp(64px, 9vw, 120px) 0 clamp(40px, 6vw, 80px); }
+.case-head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(24px, 5vw, 72px); align-items: end; margin-bottom: 40px; }
+.case-head h2 { font-size: var(--step-3); line-height: 1.08; letter-spacing: -0.02em; }
+.case-head .lede { color: var(--ink); max-width: 56ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.meta span { font-size: var(--step--1); font-weight: 600; padding: 6px 12px; border-radius: 999px; background: var(--mist); color: var(--volt); }
+
+.nameplate {
+  margin: 0 0 clamp(48px, 7vw, 88px);
+  background-color: var(--volt);
+  background-image:
+    radial-gradient(circle at 18px 18px, rgba(255,255,255,.6) 0 4px, transparent 5px),
+    radial-gradient(circle at calc(100% - 18px) 18px, rgba(255,255,255,.6) 0 4px, transparent 5px),
+    radial-gradient(circle at 18px calc(100% - 18px), rgba(255,255,255,.6) 0 4px, transparent 5px),
+    radial-gradient(circle at calc(100% - 18px) calc(100% - 18px), rgba(255,255,255,.6) 0 4px, transparent 5px);
+  color: var(--on-volt);
+  border-radius: var(--radius);
+  padding: 34px 40px;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 32px;
+}
+.nameplate div { display: grid; gap: 4px; align-content: start; }
+.nameplate dt { font-size: var(--step--1); color: var(--on-volt-2); }
+.nameplate dd { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 1.0625rem; line-height: 1.3; }
+
+.process { list-style: none; margin: 0; padding: 0; position: relative; }
+.process::before { content: ""; position: absolute; top: 8px; bottom: 8px; left: 50%; width: 2px; margin-left: -1px; background: var(--line); }
+.step { display: grid; grid-template-columns: minmax(0, 1fr) 104px minmax(0, 1fr); align-items: start; padding: 36px 0; }
+.step .num {
+  grid-column: 2; grid-row: 1; justify-self: center; position: relative; z-index: 1;
+  width: 60px; height: 60px; border-radius: 50%;
+  background: var(--volt); color: var(--on-volt);
+  display: grid; place-items: center;
+  font-family: var(--font-display); font-weight: 600; font-size: 1.25rem;
+  box-shadow: 0 0 0 8px var(--paper);
+}
+.step .text { grid-column: 1; grid-row: 1; max-width: 46ch; justify-self: end; display: grid; gap: 12px; padding-top: 10px; }
+.step .media { grid-column: 3; grid-row: 1; display: grid; gap: 14px; }
+.step:nth-child(even) .text { grid-column: 3; justify-self: start; }
+.step:nth-child(even) .media { grid-column: 1; }
+.step h3 { font-size: var(--step-2); line-height: 1.15; letter-spacing: -0.01em; }
+.step p { color: var(--ink); }
+
+figure { margin: 0; }
+.shot { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: var(--radius); overflow: hidden; }
+.shot img { width: 100%; height: auto; }
+.step .shot:not(.framed) img { aspect-ratio: 5 / 4; object-fit: cover; }
+.shot.framed { background: var(--paper); border: 1px solid var(--line); padding: 10px; }
+.shot.framed img { border-radius: 8px; }
+figcaption { font-size: var(--step--1); color: var(--ink-2); margin-top: 8px; line-height: 1.5; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.clip video { width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: cover; border-radius: var(--radius); background: var(--ink); }
+
+/* ---------- Team video ---------- */
+.team { background: var(--volt); color: var(--on-volt); padding: clamp(56px, 8vw, 104px) 0; }
+.team .wrap { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: clamp(24px, 5vw, 64px); align-items: center; }
+.team h2 { font-size: var(--step-3); line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 16px; }
+.team p { color: var(--on-volt-2); max-width: 40ch; }
+.video-slot { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; background: var(--volt-deep); box-shadow: 0 0 0 2px rgba(255,255,255,.35); }
+.video-slot iframe, .video-slot video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-slot .placeholder { position: absolute; inset: 0; display: grid; place-items: end start; padding: clamp(18px, 3vw, 32px); }
+.video-slot .placeholder img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .38; filter: grayscale(1) contrast(1.1); mix-blend-mode: luminosity; }
+.video-slot .placeholder p { position: relative; font-family: var(--font-display); font-weight: 600; font-size: clamp(1.1rem, 2.4vw, 1.6rem); color: var(--on-volt); max-width: none; }
+
+/* ---------- Other projects ---------- */
+.projects { background: var(--mist); padding: clamp(64px, 9vw, 120px) 0; }
+.section-title { font-size: var(--step-3); line-height: 1.08; letter-spacing: -0.02em; margin-bottom: clamp(28px, 4vw, 48px); }
+.opamp { background: var(--paper); border-radius: calc(var(--radius) + 6px); padding: clamp(22px, 3.5vw, 44px); display: grid; gap: clamp(22px, 3vw, 36px); margin-bottom: clamp(40px, 6vw, 72px); }
+.opamp-top { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(22px, 4vw, 56px); align-items: start; }
+.opamp h3 { font-size: var(--step-2); line-height: 1.15; margin-bottom: 14px; }
+.opamp .body { display: grid; gap: 14px; }
+.readout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 2px solid var(--volt); border-radius: 12px; overflow: hidden; }
+.readout div { padding: 12px 14px; display: grid; gap: 2px; }
+.readout div + div { border-left: 2px solid var(--volt); }
+.readout .k { font-size: var(--step--1); color: var(--ink-2); }
+.readout .v { font-family: var(--font-display); font-weight: 600; color: var(--volt); font-variant-numeric: tabular-nums; }
+.opamp-photos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.opamp-photos img { aspect-ratio: 1 / 1; object-fit: cover; }
+
+.more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 56px); }
+.work { border-top: 3px solid var(--volt); padding-top: 18px; display: grid; gap: 10px; align-content: start; }
+.work .when { font-size: var(--step--1); font-weight: 600; color: var(--volt); }
+.work h4 { font-size: 1.25rem; line-height: 1.25; }
+.work .tools { font-size: var(--step--1); color: var(--ink-2); }
+.work .shot { margin-top: 6px; max-width: 420px; }
+.work .shot img { aspect-ratio: 4 / 3; object-fit: cover; }
+
+/* ---------- About ---------- */
+.about { padding: clamp(64px, 9vw, 120px) 0; }
+.about-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px); }
+.col h3 { font-size: 1.125rem; color: var(--volt); margin-bottom: 18px; }
+.entry { display: grid; gap: 4px; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+.entry:last-child { border-bottom: 0; margin-bottom: 0; }
+.entry .when { font-size: var(--step--1); color: var(--ink-2); }
+.entry h4 { font-family: var(--font-body); font-size: 1.125rem; font-weight: 700; line-height: 1.3; }
+.entry ul { margin: 6px 0 0; padding-left: 1.1em; display: grid; gap: 4px; }
+.entry li::marker { color: var(--volt); }
+.skillset { display: grid; gap: 18px; }
+.skillset h4 { font-family: var(--font-body); font-size: var(--step--1); font-weight: 700; color: var(--ink-2); margin-bottom: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.chips li { border: 1.5px solid var(--volt); color: var(--volt); border-radius: 999px; padding: 4px 12px; font-size: 0.9375rem; font-weight: 600; }
+
+/* ---------- Contact ---------- */
+.contact { background: var(--volt); color: var(--on-volt); padding: clamp(64px, 9vw, 112px) 0 140px; }
+.contact h2 { font-size: var(--step-3); margin-bottom: 14px; letter-spacing: -0.02em; }
+.contact p { color: var(--on-volt-2); }
+.email { display: block; font-family: var(--font-display); font-weight: 600; font-size: clamp(1.35rem, 4.2vw, 3rem); color: var(--on-volt); line-height: 1.1; margin: 22px 0 28px; overflow-wrap: break-word; text-decoration: none; }
+.email:hover { text-decoration: underline; text-decoration-thickness: 3px; }
+#copy-status { color: var(--on-volt-2); font-size: var(--step--1); min-height: 1.5em; margin-top: 12px; }
+.footline { margin-top: 56px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.4); font-size: var(--step--1); color: var(--on-volt-2); }
+
+/* ---------- Viewer ---------- */
+dialog#viewer { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 96vh; overflow: visible; }
+dialog#viewer::backdrop { background: rgba(0, 0, 160, .9); }
+.viewer-inner { display: grid; gap: 12px; justify-items: center; }
+.viewer-inner img { max-width: 94vw; max-height: 80vh; width: auto; height: auto; border-radius: 10px; background: var(--paper); }
+.viewer-bar { display: flex; gap: 16px; align-items: center; justify-content: space-between; width: 100%; max-width: 94vw; color: var(--on-volt); }
+.viewer-bar p { font-size: var(--step--1); max-width: 70ch; }
+@media (prefers-reduced-motion: no-preference) {
+  dialog#viewer[open] .viewer-inner { animation: pop .2s ease-out; }
+  @keyframes pop { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: none; } }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .nameplate { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 30px 28px; }
+  .about-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .about-grid .col.skills { grid-column: 1 / -1; }
+}
+@media (max-width: 860px) {
+  .hero .wrap, .case-head, .team .wrap, .opamp-top { grid-template-columns: minmax(0, 1fr); }
+  .stator-fig canvas { margin: 0 auto; max-width: 380px; }
+  .stator-fig figcaption { text-align: center; }
+  .process::before { left: 30px; }
+  .step { grid-template-columns: 60px minmax(0, 1fr); column-gap: 18px; row-gap: 18px; padding: 28px 0; }
+  .step .num, .step:nth-child(even) .num { grid-column: 1; grid-row: 1; justify-self: start; }
+  .step .text, .step:nth-child(even) .text { grid-column: 2; grid-row: 1; justify-self: start; padding-top: 12px; }
+  .step .media, .step:nth-child(even) .media { grid-column: 2; grid-row: 2; }
+  .more { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 380px) {
+  .nameplate { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .facts { grid-template-columns: minmax(0, 1fr); }
+  .facts li + li { padding-left: 0; border-left: 0; border-top: 1px solid rgba(255,255,255,.3); padding-top: 12px; margin-top: 12px; }
+  .about-grid { grid-template-columns: minmax(0, 1fr); }
+  .readout { grid-template-columns: minmax(0, 1fr); }
+  .readout div + div { border-left: 0; border-top: 2px solid var(--volt); }
+  .dock a { padding: 9px 12px; font-size: 0.875rem; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#motors">Skip to projects</a>
+
+<header class="hero on-volt" id="top">
+  <div class="wrap">
+    <div>
+      <h1><span>Obed</span><span>Vazquez</span></h1>
+      <p class="intro">Electrical engineering student at Utah Tech University. I design electric motors, circuits, and PCBs, then build and test them.</p>
+      <div class="actions">
+        <a class="btn solid-white" href="#motors">See the motor build</a>
+        <a class="btn line-white" href="https://www.linkedin.com/in/obed-vazquez-7aaa463b2">LinkedIn</a>
+        <a class="btn line-white" href="https://github.com/obedvazquez056-ai">GitHub</a>
+      </div>
+      <ul class="facts">
+        <li><span class="k">Degree</span><span class="v">B.S. Electrical Engineering, May 2027</span></li>
+        <li><span class="k">GPA</span><span class="v">3.92</span></li>
+        <li><span class="k">FE exam</span><span class="v">Passed, August 2026</span></li>
+      </ul>
+    </div>
+    <figure class="stator-fig">
+      <canvas id="stator" width="520" height="520" role="img" aria-label="Line drawing of a motor lamination with 12 slots and a rotor with 10 magnet poles, rotating slowly."></canvas>
+      <figcaption>12 slots, 10 poles: the layout I used for the boat motors.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="dock" aria-label="Sections">
+  <a href="#motors">Motors</a>
+  <a href="#team-video">Team video</a>
+  <a href="#projects">Projects</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<main>
+
+  <section class="motors" id="motors">
+    <div class="wrap">
+      <div class="case-head">
+        <h2>Two BLDC motors for an electric boat, designed and built from scratch</h2>
+        <div>
+          <p class="lede">I designed and simulated two custom brushless DC inrunner motors for an electric boat, then fabricated, wound, and assembled them. They drive the propellers through a timing belt and pulley system, and our team raced the boat in a competitive boat race.</p>
+          <div class="meta"><span>January to May 2026</span><span>Team of four engineers</span><span>ANSYS, CAD, laser cutting, machining</span></div>
+        </div>
+      </div>
+
+      <dl class="nameplate" aria-label="Motor specifications">
+        <div><dt>Type</dt><dd>BLDC inrunner</dd></div>
+        <div><dt>Slots and poles</dt><dd>12 slots, 10 poles</dd></div>
+        <div><dt>Magnets</dt><dd>N52 permanent magnets</dd></div>
+        <div><dt>Units built</dt><dd>2</dd></div>
+        <div><dt>Winding</dt><dd>2 layers, 17 conductors per slot</dd></div>
+        <div><dt>Wire</dt><dd>2 strands of 0.724 mm copper</dd></div>
+        <div><dt>Core</dt><dd>Laser-cut laminations, varnish insulated</dd></div>
+        <div><dt>Drive</dt><dd>Timing belt and pulleys</dd></div>
+      </dl>
+
+      <ol class="process">
+        <li class="step">
+          <span class="num" aria-hidden="true">1</span>
+          <div class="text">
+            <h3>Simulate the electromagnetics</h3>
+            <p>Before cutting any metal, I modeled both motors in ANSYS to study their electromagnetic behavior, magnetic flux distribution, torque, and efficiency. The winding layout uses two layers on 12 slots, with 17 conductors per slot.</p>
+          </div>
+          <div class="media">
+            <figure>
+              <button class="shot framed" type="button" data-full="media/ansys-winding.png" data-caption="ANSYS winding setup: phase assignment for all 12 slots, two winding layers, 17 conductors per slot, two strands of 0.724 mm wire." aria-label="Enlarge the ANSYS winding layout">
+                <img src="media/ansys-winding.png" width="871" height="553" alt="ANSYS winding editor showing a 12-slot stator cross-section with phases A, B and C assigned to each slot, and a settings table listing two winding layers, 17 conductors per slot, 2 strands and 0.724 mm wire.">
+              </button>
+              <figcaption>Winding layout for phases A, B, and C across the 12 slots.</figcaption>
+            </figure>
+            <figure>
+              <button class="shot framed" type="button" data-full="media/ansys-performance.png" data-caption="Simulated output torque, input DC current, and efficiency versus speed." aria-label="Enlarge the ANSYS performance curves">
+                <img src="media/ansys-performance.png" width="1179" height="389" alt="Graph of simulated output torque and input DC current falling with speed, and efficiency rising to a peak near 2,200 rpm before dropping off.">
+              </button>
+              <figcaption>Simulated torque, current, and efficiency versus speed. Efficiency peaks near 87% around 2,200 rpm.</figcaption>
+            </figure>
+          </div>
+        </li>
+
+        <li class="step">
+          <span class="num" aria-hidden="true">2</span>
+          <div class="text">
+            <h3>Model every part in CAD</h3>
+            <p>I built 3D CAD models of the motor components and mechanical assemblies to set the dimensions, check that every part fit, and prepare the designs for manufacturing.</p>
+          </div>
+          <div class="media">
+            <figure>
+              <button class="shot framed" type="button" data-full="media/cad-exploded.png" data-caption="Exploded CAD view: end caps, rotor with magnets, wound stator, through bolts, and housing." aria-label="Enlarge the exploded CAD view">
+                <img src="media/cad-exploded.png" width="616" height="469" alt="Exploded 3D CAD model of the motor showing blue end caps, a rotor with magnets, a copper-colored stator, long through bolts and a red housing.">
+              </button>
+              <figcaption>Exploded view of the motor assembly.</figcaption>
+            </figure>
+          </div>
+        </li>
+
+        <li class="step">
+          <span class="num" aria-hidden="true">3</span>
+          <div class="text">
+            <h3>Laser-cut the laminations</h3>
+            <p>The stator core is a stack of thin laser-cut laminations instead of one solid piece of metal. I used laser cutting and machining to make the motor components.</p>
+          </div>
+          <div class="media">
+            <figure>
+              <button class="shot" type="button" data-full="media/laminations-varnish.jpg" data-caption="Laser-cut stator laminations laid out for coating, next to the can of Sprayon EL 601 red insulating varnish." aria-label="Enlarge photo of the laser-cut laminations">
+                <img src="media/laminations-varnish.jpg" width="1200" height="1600" alt="Eleven laser-cut metal stator laminations with teardrop-shaped slots laid on paper towels, next to a gloved hand holding a can of Sprayon EL 601 red insulating varnish.">
+              </button>
+              <figcaption>Laser-cut laminations and the insulating varnish.</figcaption>
+            </figure>
+          </div>
+        </li>
+
+        <li class="step">
+          <span class="num" aria-hidden="true">4</span>
+          <div class="text">
+            <h3>Insulate every layer</h3>
+            <p>Each lamination got a coat of red insulating varnish so the layers are electrically isolated from one another. That reduces eddy currents and the energy they waste.</p>
+          </div>
+          <div class="media">
+            <figure>
+              <button class="shot" type="button" data-full="media/laminations-drying.jpg" data-caption="Varnished laminations hung on a rod to dry." aria-label="Enlarge photo of the varnished laminations drying">
+                <img src="media/laminations-drying.jpg" width="1600" height="1408" alt="Dozens of red-varnished stator laminations strung along a rod, drying outdoors against a black panel.">
+              </button>
+              <figcaption>Varnished laminations drying.</figcaption>
+            </figure>
+          </div>
+        </li>
+
+        <li class="step">
+          <span class="num" aria-hidden="true">5</span>
+          <div class="text">
+            <h3>Stack and wind the stator</h3>
+            <p>The varnished laminations were stacked into the stator core and wound with custom copper windings for the 12-slot, 10-pole layout. The rotor carries N52 permanent magnets.</p>
+          </div>
+          <div class="media">
+            <figure>
+              <button class="shot" type="button" data-full="media/stator-wound.jpg" data-caption="Finished stator: varnished lamination stack, copper windings, and phase leads labeled for wiring." aria-label="Enlarge photo of the wound stator">
+                <img src="media/stator-wound.jpg" width="1518" height="1600" alt="Wound stator made of a red lamination stack with black end plates, red copper windings in each slot, red and blue heat-shrink leads, and tape labels on the phase wires.">
+              </button>
+              <figcaption>A finished stator with its phase leads labeled.</figcaption>
+            </figure>
+          </div>
+        </li>
+
+        <li class="step">
+          <span class="num" aria-hidden="true">6</span>
+          <div class="text">
+            <h3>Assemble, drive, and race</h3>
+            <p>I assembled the motors and integrated them with a timing belt and pulley drive to complete the boat's propulsion system. We tested it and used it in a competitive boat race.</p>
+          </div>
+          <div class="media">
+            <div class="pair">
+              <figure class="clip">
+                <video controls preload="metadata" playsinline poster="media/motor-on-boat-poster.jpg" aria-label="Video of an assembled motor mounted on the boat during testing">
+                  <source src="media/motor-on-boat.mp4" type="video/mp4">
+                </video>
+                <figcaption>An assembled motor mounted on the boat.</figcaption>
+              </figure>
+              <figure class="clip">
+                <video controls preload="metadata" playsinline poster="media/prop-drive-poster.jpg" aria-label="Video of the belt and pulley drive with the ducted propeller during testing">
+                  <source src="media/prop-drive.mp4" type="video/mp4">
+                </video>
+                <figcaption>The belt and pulley drive with the ducted propeller.</figcaption>
+              </figure>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="team on-volt" id="team-video">
+    <div class="wrap">
+      <div>
+        <h2>Turbo Regatta team video</h2>
+        <p>Our team's video about the Turbo Regatta electric boat project.</p>
+      </div>
+      <!--
+        TEAM VIDEO: upload the video to YouTube (Unlisted is fine), copy its link,
+        and paste it between the quotes in data-video below. Example:
+        data-video="https://youtu.be/XXXXXXXXXXX"
+        A path to an .mp4 in this repository also works, e.g. data-video="media/team-video.mp4"
+      -->
+      <div class="video-slot" id="team-video-slot" data-video="https://youtu.be/HACGYREgPOc">
+        <div class="placeholder">
+          <img src="media/laminations-drying.jpg" alt="">
+          <p>Video coming soon</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects" id="projects">
+    <div class="wrap">
+      <h2 class="section-title">More projects</h2>
+
+      <article class="opamp">
+        <div class="opamp-top">
+          <div class="body">
+            <h3>A 741 op-amp built from 20 discrete transistors</h3>
+            <p>For ECE 2225 (Lab 6, October 2026), I laid out the internal circuit of a 741 operational amplifier in KiCad, then populated and hand-soldered the PCB with 20 BJTs, 11 resistors, and a 33 pF compensation capacitor. The board follows the standard 8-pin 741 pinout, so it works in any conventional op-amp test circuit.</p>
+            <p>I tested it on a breadboard as an inverting amplifier using a function generator, DC power supply, and oscilloscope. An earlier practice board (Lab 5) built up my KiCad layout, soldering, and assembly skills first.</p>
+            <div class="readout" aria-label="Bench measurement">
+              <div><span class="k">Input at 1 kHz</span><span class="v">2.01 Vpp</span></div>
+              <div><span class="k">Output</span><span class="v">3.74 Vpp</span></div>
+              <div><span class="k">Gain</span><span class="v">−1.86</span></div>
+            </div>
+          </div>
+          <figure>
+            <button class="shot framed" type="button" data-full="media/opamp-schematic.png" data-caption="KiCad schematic of the discrete 741: Q1 to Q20 (2N3904 and 2N3906), 11 resistors, and the 33 pF compensation capacitor C1." aria-label="Enlarge the op-amp schematic">
+              <img src="media/opamp-schematic.png" width="903" height="532" alt="KiCad schematic of a 741 op-amp built from 2N3904 and 2N3906 transistors Q1 to Q20, resistors and a 33 pF capacitor, with an 8-pin connector J1.">
+            </button>
+            <figcaption>KiCad schematic, 2N3904 and 2N3906 transistors.</figcaption>
+          </figure>
+        </div>
+        <div class="opamp-photos">
+          <figure>
+            <button class="shot" type="button" data-full="media/opamp-board.jpg" data-caption="The finished board with the 8-pin header for Vcc+, NC, IN+, IN−, offset null, Vcc− and OUT." aria-label="Enlarge photo of the finished op-amp board">
+              <img src="media/opamp-board.jpg" width="947" height="1600" alt="Green PCB populated with through-hole transistors, resistors and an orange capacitor, with an 8-pin female header along the top edge.">
+            </button>
+            <figcaption>Finished board</figcaption>
+          </figure>
+          <figure>
+            <button class="shot" type="button" data-full="media/opamp-test.jpg" data-caption="Bench test: the board wired to a breadboard feedback network as an inverting amplifier." aria-label="Enlarge photo of the op-amp test setup">
+              <img src="media/opamp-test.jpg" width="1581" height="1600" alt="The op-amp PCB wired with jumper leads to a breadboard holding resistors, with a red probe clipped to the board.">
+            </button>
+            <figcaption>Wired as an inverting amplifier</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <div class="more">
+        <article class="work">
+          <span class="when">August 2026 to present</span>
+          <h4>RF microstrip patch antenna array research</h4>
+          <p>Designing and simulating microstrip patch antenna arrays in ANSYS HFSS, analyzing radiation patterns, gain, directivity, and RF performance. Parametric studies evaluate SMA probe feed locations, metamaterials, phase response, and antenna geometry.</p>
+          <p class="tools">ANSYS HFSS</p>
+        </article>
+        <article class="work">
+          <span class="when">August 2026 to present</span>
+          <h4>Lovesac lightbulb speaker PCB</h4>
+          <p>Designing a custom two-layer PCB in KiCad: schematics, footprints, routing, and ground planes, through to Gerber files. Evaluating power consumption, voltage drops, and LED performance.</p>
+          <p class="tools">KiCad, two-layer PCB, Gerber output</p>
+        </article>
+        <article class="work">
+          <span class="when">Fall 2025</span>
+          <h4>Joystick-controlled RC car</h4>
+          <p>An Arduino and ESP32 remote-controlled car steered wirelessly with an analog joystick. The microcontroller reads the joystick, turns it into direction commands, and drives the motor-control circuitry for forward, reverse, and turning in real time.</p>
+          <p class="tools">Arduino, ESP32, motor control</p>
+          <figure>
+            <button class="shot" type="button" data-full="media/rc-car.jpg" data-caption="The joystick-controlled RC car." aria-label="Enlarge photo of the RC car">
+              <img src="media/rc-car.jpg" width="1134" height="873" alt="Two-wheel robot car with yellow wheels on a clear acrylic chassis, carrying a breadboard, microcontroller and motor driver boards with many jumper wires.">
+            </button>
+          </figure>
+        </article>
+        <article class="work">
+          <span class="when">January to May 2025</span>
+          <h4>Water-based carnival game</h4>
+          <p>Team build of a water carnival game with pumps, servo motors, and sensors for real-time scoring. I wrote the game logic in C++ on an M5Stamp microcontroller with Arduino, including automated doors and LED feedback.</p>
+          <p class="tools">C++, Arduino, M5Stamp, pumps, servos, sensors</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="wrap">
+      <h2 class="section-title">About</h2>
+      <div class="about-grid">
+        <div class="col">
+          <h3>Education</h3>
+          <div class="entry">
+            <span class="when">Fall 2023 to May 2027 (expected)</span>
+            <h4>B.S. Electrical Engineering, Utah Tech University</h4>
+            <ul>
+              <li>GPA 3.92</li>
+              <li>Presidential Academic Scholarship</li>
+              <li>Passed the FE exam, Electrical and Computer, August 2026</li>
+              <li>Coursework: electromagnetics and transmission lines, RF antenna engineering, circuits, digital circuits, semiconductors, power electronics, electric machinery, signals and systems, systems and controls, probability and statistics</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col">
+          <h3>Experience</h3>
+          <div class="entry">
+            <span class="when">February 2026 to present</span>
+            <h4>Math Tutor, Utah Tech University</h4>
+            <p>One-on-one and small-group tutoring in college mathematics, helping students understand concepts, solve problems, and build analytical skills.</p>
+          </div>
+          <div class="entry">
+            <span class="when">June 2021 to present</span>
+            <h4>Bilingual Operator, Apello</h4>
+            <p>Bilingual customer support in English and Spanish, resolving customer inquiries in a professional environment.</p>
+          </div>
+        </div>
+        <div class="col skills">
+          <h3>Skills</h3>
+          <div class="skillset">
+            <div><h4>Design and simulation</h4><ul class="chips"><li>ANSYS</li><li>HFSS</li><li>LTspice</li><li>Onshape</li></ul></div>
+            <div><h4>PCB</h4><ul class="chips"><li>KiCad</li><li>Schematic design</li><li>PCB layout</li><li>Custom footprints</li></ul></div>
+            <div><h4>Build and test</h4><ul class="chips"><li>Circuit testing</li><li>Soldering</li><li>Laser cutting</li><li>Machining</li></ul></div>
+            <div><h4>Programming</h4><ul class="chips"><li>C++</li><li>Python</li><li>Arduino</li></ul></div>
+            <div><h4>Languages</h4><ul class="chips"><li>English</li><li>Spanish</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="contact on-volt" id="contact">
+  <div class="wrap">
+    <h2>Contact</h2>
+    <p>Email is the best way to reach me.</p>
+    <a class="email" id="email" href="mailto:obedvazquez056@gmail.com">obedvazquez056@<wbr>gmail.com</a>
+    <div class="actions">
+      <button class="btn solid-white" type="button" id="copy-email">Copy email address</button>
+      <a class="btn line-white" href="https://www.linkedin.com/in/obed-vazquez-7aaa463b2">LinkedIn</a>
+      <a class="btn line-white" href="https://github.com/obedvazquez056-ai">GitHub</a>
+    </div>
+    <p id="copy-status" role="status"></p>
+    <p class="footline">Obed Vazquez, St. George, Utah. Updated November 2026.</p>
+  </div>
+</footer>
+
+<dialog id="viewer" aria-label="Enlarged image">
+  <div class="viewer-inner">
+    <img id="viewer-img" src="" alt="">
+    <div class="viewer-bar">
+      <p id="viewer-cap"></p>
+      <button class="btn solid-white" type="button" id="viewer-close">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  /* Hero: 12-slot stator lamination with a 10-pole rotor */
+  var canvas = document.getElementById('stator');
+  var ctx = canvas.getContext('2d');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var S = 520, angle = 0, running = false, last = 0, visible = true;
+
+  function fit() {
+    var css = canvas.getBoundingClientRect().width || 520;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(css * dpr);
+    canvas.height = Math.round(css * dpr);
+    S = css;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }
+
+  function slot(c, r0, r1, a, w0, w1) {
+    var ca = Math.cos(a), sa = Math.sin(a);
+    function p(r, t) { return [c + r * ca - t * sa, c + r * sa + t * ca]; }
+    var rt = r0 + S * 0.018;
+    ctx.beginPath();
+    var q = p(r0 - 2, -w0); ctx.moveTo(q[0], q[1]);
+    q = p(rt, -w0); ctx.lineTo(q[0], q[1]);
+    q = p(rt + S * 0.012, -w1 * 0.55); ctx.lineTo(q[0], q[1]);
+    q = p(r1, -w1); ctx.lineTo(q[0], q[1]);
+    var e = p(r1, 0);
+    ctx.arc(e[0], e[1], w1, a - Math.PI / 2, a + Math.PI / 2);
+    q = p(rt + S * 0.012, w1 * 0.55); ctx.lineTo(q[0], q[1]);
+    q = p(rt, w0); ctx.lineTo(q[0], q[1]);
+    q = p(r0 - 2, w0); ctx.lineTo(q[0], q[1]);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function draw() {
+    var c = S / 2, Ro = S * 0.43, Rb = S * 0.215;
+    ctx.clearRect(0, 0, S, S);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = '#FFFFFF';
+    /* lamination body with five mounting ears */
+    ctx.beginPath(); ctx.arc(c, c, Ro, 0, Math.PI * 2); ctx.fill();
+    for (var k = 0; k < 5; k++) {
+      var ea = -Math.PI / 2 + k * Math.PI * 2 / 5;
+      ctx.beginPath(); ctx.arc(c + Math.cos(ea) * Ro * 1.04, c + Math.sin(ea) * Ro * 1.04, S * 0.055, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalCompositeOperation = 'destination-out';
+    for (k = 0; k < 5; k++) {
+      ea = -Math.PI / 2 + k * Math.PI * 2 / 5;
+      ctx.beginPath(); ctx.arc(c + Math.cos(ea) * Ro * 1.06, c + Math.sin(ea) * Ro * 1.06, S * 0.018, 0, Math.PI * 2); ctx.fill();
+    }
+    for (var i = 0; i < 12; i++) {
+      slot(c, Rb, S * 0.335, i * Math.PI / 6 + Math.PI / 12, S * 0.008, S * 0.034);
+    }
+    ctx.beginPath(); ctx.arc(c, c, Rb, 0, Math.PI * 2); ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+
+    /* rotor: 10 alternating magnet poles */
+    var Rr = Rb - S * 0.014, Rm = Rr - S * 0.032;
+    ctx.save(); ctx.translate(c, c); ctx.rotate(angle);
+    ctx.lineWidth = Math.max(1.5, S * 0.004);
+    ctx.strokeStyle = '#FFFFFF';
+    for (i = 0; i < 10; i++) {
+      var a0 = i * Math.PI / 5 + 0.03, a1 = (i + 1) * Math.PI / 5 - 0.03;
+      ctx.beginPath(); ctx.arc(0, 0, Rr, a0, a1); ctx.arc(0, 0, Rm, a1, a0, true); ctx.closePath();
+      if (i % 2 === 0) { ctx.fillStyle = '#FFFFFF'; ctx.fill(); } else { ctx.stroke(); }
+    }
+    ctx.beginPath(); ctx.arc(0, 0, Rm - S * 0.01, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, S * 0.045, 0, Math.PI * 2); ctx.fillStyle = '#FFFFFF'; ctx.fill();
+    for (i = 0; i < 4; i++) {
+      var ha = i * Math.PI / 2 + Math.PI / 4;
+      ctx.beginPath(); ctx.arc(Math.cos(ha) * Rm * 0.6, Math.sin(ha) * Rm * 0.6, S * 0.014, 0, Math.PI * 2); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function frame(t) {
+    if (!running) return;
+    if (last) angle += (t - last) * 0.00035;
+    last = t;
+    draw();
+    requestAnimationFrame(frame);
+  }
+  function start() { if (reduce || running || !visible) return; running = true; last = 0; requestAnimationFrame(frame); }
+  function stop() { running = false; }
+
+  fit();
+  window.addEventListener('resize', fit);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; visible ? start() : stop(); }).observe(canvas);
+  } else { start(); }
+
+  /* Dock: mark the section in view */
+  var links = Array.prototype.slice.call(document.querySelectorAll('.dock a'));
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          links.forEach(function (l) { l.removeAttribute('aria-current'); });
+          var l = map[e.target.id]; if (l) l.setAttribute('aria-current', 'true');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    Object.keys(map).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+  }
+
+  /* Team video slot: YouTube link or .mp4 path in data-video */
+  var slotEl = document.getElementById('team-video-slot');
+  var url = (slotEl.getAttribute('data-video') || '').trim();
+  if (url) {
+    var m = url.match(/(?:youtu\.be\/|[?&]v=|embed\/|shorts\/)([\w-]{11})/);
+    if (m) {
+      slotEl.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + m[1] + '" title="Turbo Regatta team video" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>';
+    } else if (/\.(mp4|webm|mov)(\?.*)?$/i.test(url)) {
+      slotEl.innerHTML = '<video controls preload="metadata" playsinline src="' + url.replace(/"/g, '') + '"></video>';
+    }
+  }
+
+  /* Image viewer */
+  var dlg = document.getElementById('viewer');
+  var vImg = document.getElementById('viewer-img');
+  var vCap = document.getElementById('viewer-cap');
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-full]');
+    if (!b) return;
+    var thumb = b.querySelector('img');
+    vImg.src = b.getAttribute('data-full');
+    vImg.alt = thumb ? thumb.alt : '';
+    vCap.textContent = b.getAttribute('data-caption') || '';
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+  });
+  document.getElementById('viewer-close').addEventListener('click', function () { dlg.close(); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+
+  /* Copy email */
+  var status = document.getElementById('copy-status');
+  document.getElementById('copy-email').addEventListener('click', function () {
+    var addr = 'obedvazquez056@gmail.com';
+    var fail = function () { status.textContent = 'Copy is blocked here. Select the address above to copy it.'; };
+    try {
+      navigator.clipboard.writeText(addr).then(function () { status.textContent = 'Copied to clipboard.'; }, fail);
+    } catch (err) { fail(); }
+  });
+})();
+</script>
+</body>
+</html>
